@@ -1,0 +1,26 @@
+[
+    {
+        "search": "{{BUSINESS_UNIT}}",
+        "replacement": "tcx-test-repo"
+    },
+    {
+        "search": "{{PROJECT_NAME}}",
+        "replacement": "test-project-tcx"
+    },
+    {
+        "search": "{{GITHUB_REPO_URL}}",
+        "replacement": "https://github.com/examplebu/exampleproject"
+    },
+    {
+        "search": "{{PROJECT_DESCRIPTION_SLUG}}",
+        "replacement": "Example project used to demonstrate all aspects of a project development and deployment"
+    },
+    {
+        "search": "tucowsinc/tcx-tto-platform-devops",
+        "replacement": "tucowsinc/example-github-team-name"
+    },
+    {
+        "search": "{{PROJECT_CONTRIBUTORS}}",
+        "replacement": "* [Example Person](mailto:eperson@tucowsinc.com)"
+    }
+]
