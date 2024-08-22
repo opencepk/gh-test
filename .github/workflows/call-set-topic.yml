@@ -1,0 +1,58 @@
+# File: .github/workflows/call-set-topic.yml
+name: call-set-topic
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'The repository name'
+        required: true
+        type: string
+      org:
+        description: 'The organization name'
+        required: true
+        type: string
+
+jobs:
+  call-set-topic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v3
+        with:
+          application_id: ${{ secrets.BOT_TEST_APPLICATION_ID }}
+          application_private_key: ${{ secrets.BOT_TEST_APPLICATION_PRIVATE_KEY }}
+          revoke_token: true
+
+      - name: Read .project-properties.json if it exists
+        id: read-properties
+        run: |
+          if [ -f ".project-properties.json" ]; then
+            properties=$(jq -c . ./.project-properties.json)
+            echo "PROPERTIES=$properties" >> $GITHUB_ENV
+          else
+            echo "PROPERTIES={}" >> $GITHUB_ENV
+          fi
+
+
+      - name: Stringify JSON Data
+        run: |
+          properties_escaped=$(echo '${{ env.PROPERTIES }}' | sed 's/"/\\"/g')
+          echo "PROPERTIES_ESCAPED=$properties_escaped" >> $GITHUB_ENV
+
+      - name: Stringify JSON Data that will be sent to the reusable workflow
+        run: |
+          echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
+
+      - name: Trigger reusable workflow via API
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ steps.get_workflow_token.outputs.token }}" \
+            -d '{"ref":"main", "inputs":{"repo":"${{ github.event.inputs.repo }}", "org":"${{ github.event.inputs.org }}", "github-token":"${{ secrets.PAT }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}}' \
+            https://api.github.com/repos/tucowsinc/cepk-test-ghactions-02/actions/workflows/topic-workflow.yml/dispatches
