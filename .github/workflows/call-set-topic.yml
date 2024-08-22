@@ -1,7 +1,11 @@
-# File: .github/workflows/set-topic-reusable.yml
-name: Set Topic Reusable Workflow
+# File: .github/workflows/call-set-topic.yml
+name: call-set-topic
+
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       repo:
@@ -12,17 +16,9 @@ on:
         description: 'The organization name'
         required: true
         type: string
-      github-token:
-        description: 'GitHub Token'
-        required: true
-        type: string
-      properties:
-        description: 'Properties JSON'
-        required: false
-        type: string
 
 jobs:
-  set-topic:
+  call-set-topic:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,34 +28,38 @@ jobs:
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v3
         with:
-          application_id: ${{ secrets.APPLICATION_ID }}
-          application_private_key: ${{ secrets.APPLICATION_GITHUB_APP_PRIVATE_KEY }}
+          application_id: ${{ secrets.GH_APP_REPO_ACTION_RW_APPLICATION_ID }}
+          application_private_key: ${{ secrets.GH_APP_REPO_ACTION_RW_PRIVATE_KEY }}
           revoke_token: true
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install jq
-        run: sudo apt-get install -y jq
-
-      - name: Extract Repository Name
-        id: extract_repo_name
-        run: echo "::set-output name=repo_name::$(echo '${{ github.event.inputs.repo }}' | awk -F'/' '{print $2}')"
-
-      - name: Debug Print received inputs
+      - name: Read .project-properties.json if it exists
+        id: read-properties
         run: |
-          echo "Received Repo: ${{ github.event.inputs.repo }}"
-          echo "Extracted Repo Name: ${{ steps.extract_repo_name.outputs.repo_name }}"
-          echo "Received Org: ${{ github.event.inputs.org }}"
-          echo "Received Properties: $(echo '${{ github.event.inputs.properties }}' | jq .)"
+          if [ -f ".project-properties.json" ]; then
+            properties=$(jq -c . ./.project-properties.json)
+            echo "PROPERTIES=$properties" >> $GITHUB_ENV
+          else
+            echo "PROPERTIES={}" >> $GITHUB_ENV
+          fi
 
-      - name: Add Topics to Repository
-        uses: opencepk/opencepk-module-ghactions-common/github-set-topics@fix/update-gitmodules-action
-        with:
-          github-token: ${{ steps.get_workflow_token.outputs.token }}
-          properties-file: '.project-properties.json' # Optional, defaults to .project-properties.json
-          repo: ${{ steps.extract_repo_name.outputs.repo_name }}
-          org: ${{ github.event.inputs.org }}
-          properties: ${{ github.event.inputs.properties }}
+      - name: Stringify JSON Data
+        run: |
+          properties_escaped=$(echo '${{ env.PROPERTIES }}' | sed 's/"/\\"/g')
+          echo "PROPERTIES_ESCAPED=$properties_escaped" >> $GITHUB_ENV
+
+      - name: Stringify JSON Data that will be sent to the reusable workflow
+        run: |
+          echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
+
+      - name: Debug Print repo and org
+        run: |
+          echo "Repo: ${{ github.event.inputs.repo != '' && github.event.inputs.repo || github.repository }}"
+          echo "Org: ${{ github.event.inputs.org != '' && github.event.inputs.org || github.repository_owner }}"
+
+      - name: Trigger reusable workflow via API
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ steps.get_workflow_token.outputs.token }}" \
+            -d '{"ref":"main", "inputs":{"repo":"${{ github.event.inputs.repo != '' && github.event.inputs.repo || github.repository }}", "org":"${{ github.event.inputs.org != '' && github.event.inputs.org || github.repository_owner }}", "github-token":"${{ steps.get_workflow_token.outputs.token }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}}' \
+            https://api.github.com/repos/opencepk/opencepk-projects-hub/actions/workflows/topic-workflow.yml/dispatches
