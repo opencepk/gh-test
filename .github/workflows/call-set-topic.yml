@@ -25,8 +25,8 @@ jobs:
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v3
         with:
-          application_id: ${{ secrets.BOT_TEST_APPLICATION_ID }}
-          application_private_key: ${{ secrets.BOT_TEST_APPLICATION_PRIVATE_KEY }}
+          application_id: ${{ secrets.GH_APP_REPO_ACTION_RW_APPLICATION_ID }}
+          application_private_key: ${{ secrets.GH_APP_REPO_ACTION_RW_PRIVATE_KEY }}
           revoke_token: true
 
       - name: Read .project-properties.json if it exists
