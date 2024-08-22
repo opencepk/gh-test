@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
 
-      - name: Debug: Print repo and org
+      - name: Debug Print repo and org
         run: |
           echo "Repo: ${{ github.event.inputs.repo != '' && github.event.inputs.repo || github.repository }}"
           echo "Org: ${{ github.event.inputs.org != '' && github.event.inputs.org || github.repository_owner }}"
