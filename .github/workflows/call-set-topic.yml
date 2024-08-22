@@ -1,7 +1,6 @@
 # File: .github/workflows/call-set-topic.yml
 name: call-set-topic
 
-
 on:
   push:
     branches:
