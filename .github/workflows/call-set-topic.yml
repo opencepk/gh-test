@@ -52,8 +52,8 @@ jobs:
 
       - name: Debug: Print repo and org
         run: |
-          echo "Repo: ${{ github.event.inputs.repo || github.repository }}"
-          echo "Org: ${{ github.event.inputs.org || github.repository_owner }}"
+          echo "Repo: ${{ github.event.inputs.repo != '' && github.event.inputs.repo || github.repository }}"
+          echo "Org: ${{ github.event.inputs.org != '' && github.event.inputs.org || github.repository_owner }}"
 
       - name: Trigger reusable workflow via API
         run: |
