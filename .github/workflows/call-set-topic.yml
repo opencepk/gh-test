@@ -3,7 +3,8 @@ name: call-set-topic
 
 on:
   push:
-    types: [main]
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       repo:
