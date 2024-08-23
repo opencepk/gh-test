@@ -40,9 +40,18 @@ jobs:
           echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
 
       - name: Trigger reusable workflow via API
-        run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ steps.get_workflow_token.outputs.token }}" \
-            -d '{"ref":"main", "inputs":{"repo":"${{  github.repository  }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}}' \
-            https://api.github.com/repos/opencepk/opencepk-projects-hub/actions/workflows/topic-workflow.yml/dispatches
+        uses: your-username/trigger-workflow-action@v1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          repo: 'opencepk/opencepk-projects-hub'
+          workflow_id: 'github-set-topic-workflow.yml'
+          ref: 'main'
+          inputs: '{"repo":"${{ github.repository }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}'
+
+      # - name: Trigger reusable workflow via API
+      #   run: |
+      #     curl -X POST \
+      #       -H "Accept: application/vnd.github.v3+json" \
+      #       -H "Authorization: token ${{ steps.get_workflow_token.outputs.token }}" \
+      #       -d '{"ref":"main", "inputs":{"repo":"${{  github.repository  }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}}' \
+      #       https://api.github.com/repos/opencepk/opencepk-projects-hub/actions/workflows/github-set-topic-workflow.yml/dispatches
