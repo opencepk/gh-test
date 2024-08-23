@@ -20,24 +20,35 @@ jobs:
           application_private_key: ${{ secrets.GH_APP_REPO_ACTION_RW_PRIVATE_KEY }}
           revoke_token: true
 
-      - name: Read .project-properties.json if it exists
-        id: read-properties
-        run: |
-          if [ -f ".project-properties.json" ]; then
-            properties=$(jq -c . ./.project-properties.json)
-            echo "PROPERTIES=$properties" >> $GITHUB_ENV
-          else
-            echo "PROPERTIES={}" >> $GITHUB_ENV
-          fi
+      # - name: Read .project-properties.json if it exists
+      #   id: read-properties
+      #   run: |
+      #     if [ -f ".project-properties.json" ]; then
+      #       properties=$(jq -c . ./.project-properties.json)
+      #       echo "PROPERTIES=$properties" >> $GITHUB_ENV
+      #     else
+      #       echo "PROPERTIES={}" >> $GITHUB_ENV
+      #     fi
 
-      - name: Stringify JSON Data
-        run: |
-          properties_escaped=$(echo '${{ env.PROPERTIES }}' | sed 's/"/\\"/g')
-          echo "PROPERTIES_ESCAPED=$properties_escaped" >> $GITHUB_ENV
+      # - name: Stringify JSON Data
+      #   run: |
+      #     properties_escaped=$(echo '${{ env.PROPERTIES }}' | sed 's/"/\\"/g')
+      #     echo "PROPERTIES_ESCAPED=$properties_escaped" >> $GITHUB_ENV
+
+      - name: Read and Stringify JSON Data
+        id: read-and-stringify-json
+        uses: opencepk/opencepk-module-ghactions-common/read-and-stringify-json-action@fix/update-gitmodules-action
+        with:
+          file: '.project-properties.json'
+          file_type: 'json'
 
       - name: Debug Stringified JSON Data
         run: |
-          echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
+          echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.properties }}"
+
+      # - name: Debug Stringified JSON Data
+      #   run: |
+      #     echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.properties}}"
 
       - name: Trigger reusable workflow via API
         uses: opencepk/opencepk-module-ghactions-common/trigger-workflow-action@fix/update-gitmodules-action
@@ -46,7 +57,7 @@ jobs:
           repo: 'opencepk/opencepk-projects-hub'
           workflow_id: 'github-set-topic-workflow.yml'
           ref: 'main'
-          inputs: '{"repo":"${{ github.repository }}", "properties":"${{ env.PROPERTIES_ESCAPED }}"}'
+          inputs: '{"repo":"${{ github.repository }}", "properties":"${{steps.read-and-stringify-json.outputs.properties}}"}'
 
       # - name: Trigger reusable workflow via API
       #   run: |
