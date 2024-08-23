@@ -40,7 +40,7 @@ jobs:
           echo "JSON Data which will be sent: ${{ env.PROPERTIES_ESCAPED }}"
 
       - name: Trigger reusable workflow via API
-        uses: your-username/trigger-workflow-action@v1
+        uses: opencepk/opencepk-module-ghactions-common/trigger-workflow-action@fix/update-gitmodules-action
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           repo: 'opencepk/opencepk-projects-hub'
