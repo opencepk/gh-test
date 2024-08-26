@@ -57,7 +57,7 @@ jobs:
           repo: 'opencepk/opencepk-projects-hub'
           workflow_id: 'github-set-topic-workflow.yml'
           ref: 'main'
-          inputs: '{"repo":"${{ github.repository }}", "properties":"${{steps.read-and-stringify-json.outputs.properties}}"}'
+          inputs: '{"repo":"${{ github.repository }}", "properties":"${{steps.read-and-stringify-json.outputs.properties11111}}"}'
 
       # - name: Trigger reusable workflow via API
       #   run: |
