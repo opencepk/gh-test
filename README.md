@@ -1,10 +1,10 @@
 ![logo](assets/project-logo.png)
 
-# {{BUSINESS_UNIT}}-{{PROJECT_NAME}}
+# tcx-test-repo-test-project-tcx
 
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit) ![pre-commit-badge]({{GITHUB_REPO_URL}}/actions/workflows/pre-commit.yml/badge.svg)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit) ![pre-commit-badge](https://github.com/examplebu/exampleproject/actions/workflows/pre-commit.yml/badge.svg)
 
-{{PROJECT_DESCRIPTION_SLUG}}
+Example project used to demonstrate all aspects of a project development and deployment
 
 
 <!--
@@ -20,7 +20,7 @@ sssssss
 
 <!--TOC-->
 
-- [{{BUSINESS_UNIT}}-{{PROJECT_NAME}}](#business_unit-project_name)
+- [tcx-test-repo-test-project-tcx](#tcx-test-repo-test-project-tcx)
   - [What's Here](#whats-here)
 - [Getting Started](#getting-started)
   - [Getting Started - Prerequisites](#getting-started---prerequisites)
@@ -132,9 +132,9 @@ include in the README.
 Show your appreciation to those who have contributed to the project.
 -->
 
-{{PROJECT_CONTRIBUTORS}}
+* [Example Person](mailto:eperson@tucowsinc.com)
 
-See also the list of [contributors]({{GITHUB_REPO_URL}}/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/examplebu/exampleproject/graphs/contributors) who participated in this project.
 
 ## Contributing
 
@@ -154,8 +154,8 @@ if it requires external setup, such as starting a Selenium server for testing in
 
 We use [SemVer](http://semver.org/) for versioning this project
 
-* [See releases for this project]({{GITHUB_REPO_URL}}/releases)
-* [See tags for this repo]({{GITHUB_REPO_URL}}/tags)
+* [See releases for this project](https://github.com/examplebu/exampleproject/releases)
+* [See tags for this repo](https://github.com/examplebu/exampleproject/tags)
 
 ## Support
 

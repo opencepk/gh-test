@@ -1,18 +1,18 @@
 [
     {
-        "search": "{{BUSINESS_UNIT}}",
+        "search": "tcx-test-repo",
         "replacement": "examplebu"
     },
     {
-        "search": "{{PROJECT_NAME}}",
+        "search": "test-project-tcx",
         "replacement": "exampleproject"
     },
     {
-        "search": "{{GITHUB_REPO_URL}}",
+        "search": "https://github.com/examplebu/exampleproject",
         "replacement": "https://github.com/examplebu/exampleproject"
     },
     {
-        "search": "{{PROJECT_DESCRIPTION_SLUG}}",
+        "search": "Example project used to demonstrate all aspects of a project development and deployment",
         "replacement": "Example project used to demonstrate all aspects of a project development and deployment"
     },
     {
@@ -20,7 +20,7 @@
         "replacement": "opencepk/example-github-team-name"
     },
     {
-        "search": "{{PROJECT_CONTRIBUTORS}}",
+        "search": "* [Example Person](mailto:eperson@tucowsinc.com)",
         "replacement": "* [Example Person](mailto:eperson@opencepk.com)"
     }
 ]

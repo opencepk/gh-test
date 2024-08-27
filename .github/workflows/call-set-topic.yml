@@ -44,11 +44,11 @@ jobs:
 
       - name: Debug Stringified JSON Data
         run: |
-          echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.properties }}"
+          echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.output }}"
 
       # - name: Debug Stringified JSON Data
       #   run: |
-      #     echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.properties}}"
+      #     echo "JSON Data which will be sent: ${{ steps.read-and-stringify-json.outputs.output}}"
 
       - name: Trigger reusable workflow via API
         uses: opencepk/opencepk-module-ghactions-common/trigger-workflow-action@fix/update-gitmodules-action
