@@ -1,0 +1,54 @@
+---
+name: github-uar.yml
+
+on:
+  push:
+    branches:
+      - main
+      - fix/UAR-automation
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      role:
+        description: 'Role to filter members by'
+        required: false
+        default: ''
+
+jobs:
+  UAR-automation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v3
+        with:
+          application_id: ${{ secrets.GH_APP_FULL_APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_GITHUB_APP_FULL_PRIVATE_KEY }}
+          revoke_token: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run list_org_owners.py script
+        run: python scripts/list_org_owners.py
+        env:
+          GITHUB_ORG_NAME: tucowsinc
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          ROLE: ${{ github.event.inputs.role }}
+
+      - name: Upload CSV as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: org-members
+          path: org_members.csv
